@@ -2,7 +2,7 @@
 
 ![TOActionSheet](screenshot.jpg)
 
-'TOActionSheet` is an iOS UI control providing a modal prompt control, similar to `UIActionSheet`. 
+`TOActionSheet` is an iOS UI control providing a modal prompt control, similar to `UIActionSheet`. 
 Unlike `UIActionSheet`, it can be very heavily re-themed, and avoids the delegate model by using blocks for each button.
 
 ## Features

@@ -86,6 +86,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 - (void)show;
 
 /* Content views setup */
+- (void)setUpContainerWidth;
 - (void)setUpContainer;
 - (void)setUpDimmingView;
 - (void)setUpRegularButtons;
@@ -135,6 +136,16 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     return self;
 }
 
+- (instancetype)initWithStyle:(TOActionSheetStyle)style
+{
+    if (self = [super init]) {
+        _style = style;
+        [self setUp];
+    }
+    
+    return self;
+}
+
 - (instancetype)initWithHeaderView:(UIView *)headerView
 {
     if (self = [super init]) {
@@ -162,10 +173,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     _titleFont = [UIFont systemFontOfSize:14.0f];
     _cancelButtonFont = [UIFont boldSystemFontOfSize:16.0f];
     _cancelButtonTitle = NSLocalizedStringFromTable(@"Cancel", @"TOActionSheetLocalizable", @"Cancel Button");
-    [self setColorsForStyle:TOActionSheetStyleLight];
-    
-    //Caclulate width
-    _width = kTOActionSheetDefaultWidth;
+    [self setColorsForStyle:_style];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceWillChangeOrientation:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
 }
@@ -178,11 +186,11 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 - (void)setColorsForStyle:(TOActionSheetStyle)style
 {
     if (style == TOActionSheetStyleDark) {
-        _buttonBackgroundColor              = [UIColor colorWithWhite:0.27f alpha:1.0f];
+        _buttonBackgroundColor              = [UIColor colorWithWhite:0.3f alpha:1.0f];
         _buttonTextColor                    = [UIColor colorWithWhite:1.0f alpha:1.0f];
         _buttonTappedBackgroundColor        = [UIColor colorWithRed:44.0f/255.0f green:130.0f/255.0f blue:170.0f/255.0f alpha:1.0f];
         _buttonTappedTextColor              = [UIColor colorWithWhite:1.0f alpha:1.0f];
-        _cancelButtonBackgroundColor        = [UIColor colorWithWhite:0.15f alpha:1.0f];
+        _cancelButtonBackgroundColor        = [UIColor colorWithWhite:0.25f alpha:1.0f];
         _cancelButtonTextColor              = [UIColor colorWithWhite:1.0f alpha:1.0f];
         _cancelButtonTappedBackgroundColor  = [UIColor colorWithWhite:0.15 alpha:1.0f];
         _cancelButtonTappedTextColor        = [UIColor colorWithWhite:1.0f alpha:1.0f];
@@ -191,8 +199,8 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         _destructiveButtonTappedBackgroundColor = [UIColor colorWithRed:0.6f green:0.0f blue:0.0f alpha:1.0f];
         _destructiveButtonTappedTextColor   = [UIColor colorWithWhite:1.0f alpha:1.0f];
         _buttonSeparatorColor               = [UIColor colorWithWhite:0.4f alpha:1.0f];
-        _headerBackgroundColor              = [UIColor colorWithWhite:0.27f alpha:1.0f];
-        _dimmingViewAlpha                   = 0.5f;
+        _headerBackgroundColor              = [UIColor colorWithWhite:0.3f alpha:1.0f];
+        _dimmingViewAlpha                   = 0.65f;
         _titleColor                         = [UIColor colorWithWhite:0.85f alpha:1.0f];
     }
     else {
@@ -218,28 +226,20 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
-    self.cancelButton.hidden = !self.compactLayout;
+    [self setUpContainerWidth];
     
     CGRect frame = CGRectZero;
-    
     if (self.compactLayout) {
         self.arrowImageView.hidden = YES;
-        
-        CGFloat width = MIN(self.frame.size.width, self.frame.size.height);
-        width -= 20.0f; //10 point padding on either side
-        
-        if (self.maximumCompactWidth > FLT_EPSILON)
-            width = MIN(self.maximumCompactWidth,width);
 
         frame = self.cancelButton.frame;
-        frame.size.width = width;
+        frame.size.width = self.width;
         frame.origin.x = (self.frame.size.width - frame.size.width) * 0.5f;
         frame.origin.y = (self.frame.size.height - kTOActionSheetCompactMargin) - frame.size.height;
         self.cancelButton.frame = frame;
         
         frame = self.containerView.frame;
-        frame.size.width = width;
+        frame.size.width = self.width;
         frame.origin.x = (self.frame.size.width - frame.size.width) * 0.5f;
         frame.origin.y = (self.cancelButton.frame.origin.y - kTOActionSheetCompactMargin) - frame.size.height;
         self.containerView.frame = frame;
@@ -247,7 +247,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     else {
         //make sure the frame is reset to standard
         frame = self.containerView.frame;
-        frame.size.width = kTOActionSheetDefaultWidth;
+        frame.size.width = self.width;
         self.containerView.frame = frame;
         
         CGRect presentationRect = self.presentationRect;
@@ -267,6 +267,8 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         self.containerView.frame = [self frameOfContainerViewWithArrowDirection:self.arrowDirection presentationRect:presentationRect];
         self.arrowImageView.frame = [self frameOfArrowViewWithDirection:self.arrowDirection presentationRect:presentationRect];
     }
+    
+    self.cancelButton.hidden = !self.compactLayout;
 }
 
 - (void)deviceWillChangeOrientation:(NSNotification *)notification
@@ -586,6 +588,22 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     }
 }
 
+- (void)setUpContainerWidth
+{
+    if (self.compactLayout == NO) {
+        self.width = kTOActionSheetDefaultWidth;
+        return;
+    }
+    
+    CGFloat width = MIN(self.frame.size.width, self.frame.size.height);
+    width -= 20.0f; //10 point padding on either side
+    
+    if (self.maximumCompactWidth > FLT_EPSILON)
+        width = MIN(self.maximumCompactWidth,width);
+    
+    self.width = width;
+}
+
 - (void)setUpContainer
 {
     //Create the container
@@ -677,14 +695,19 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     if (self.containerView)
         return;
     
-    //Set up various views
+    //Set up ourselves
+    [self setUpDimmingView];
+    
+    //Set up the width of the container
+    [self setUpContainerWidth];
+    
+    //Set up various views in the container
     [self setUpRegularButtons];
     [self setUpCancelButton];
     [self setUpDestructiveButton];
     [self setUpHeaderView];
     [self setUpSeparators];
     [self setUpContainer];
-    [self setUpDimmingView];
     
     //Force a layout now to update the state
     [self setNeedsLayout];
@@ -738,10 +761,22 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 {
     CGPoint anchorPoint = (CGPoint){0.5f, 0.5f};
     switch (self.arrowDirection) {
-        case TOActionSheetArrowDirectionDown: anchorPoint.y = 1.0f; break;
-        case TOActionSheetArrowDirectionLeft: anchorPoint.x = 0.0f; break;
-        case TOActionSheetArrowDirectionUp:   anchorPoint.y = 0.0f; break;
-        case TOActionSheetArrowDirectionRight: anchorPoint.x = 1.0f; break;
+        case TOActionSheetArrowDirectionDown:
+            anchorPoint.x = CGRectGetMidX(self.arrowImageView.frame) / CGRectGetWidth(self.containerView.frame);
+            anchorPoint.y = 1.0f;
+            break;
+        case TOActionSheetArrowDirectionLeft:
+            anchorPoint.y = CGRectGetMidY(self.arrowImageView.frame) / CGRectGetHeight(self.containerView.frame);
+            anchorPoint.x = 0.0f;
+            break;
+        case TOActionSheetArrowDirectionUp:
+            anchorPoint.x = CGRectGetMidX(self.arrowImageView.frame) / CGRectGetWidth(self.containerView.frame);
+            anchorPoint.y = 0.0f;
+            break;
+        case TOActionSheetArrowDirectionRight:
+            anchorPoint.y = CGRectGetMidY(self.arrowImageView.frame) / CGRectGetHeight(self.containerView.frame);
+            anchorPoint.x = 1.0f;
+            break;
         default: break;
     }
     
@@ -931,11 +966,11 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         return TOActionSheetArrowDirectionDown; //Appears on top
     else if (CGRectGetMinX(presentationRect) - width > 0)
         return TOActionSheetArrowDirectionRight; //Left hand side
-    else if (CGRectGetMaxY(presentationRect) + width <= CGRectGetHeight(self.frame))
-        return TOActionSheetArrowDirectionUp;
     else if (CGRectGetMaxX(presentationRect) + width <= CGRectGetWidth(self.frame))
         return TOActionSheetArrowDirectionLeft;
-    
+    else if (CGRectGetMaxY(presentationRect) + width <= CGRectGetHeight(self.frame))
+        return TOActionSheetArrowDirectionUp;
+
     return TOActionSheetArrowDirectionNone;
 }
 
@@ -951,7 +986,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
             break;
         case TOActionSheetArrowDirectionRight:
             frame.origin.y = CGRectGetMidY(presentationRect) - (CGRectGetHeight(frame) * 0.5f);
-            frame.origin.x = CGRectGetMinX(presentationRect) - (CGRectGetWidth(frame) * 0.5f);
+            frame.origin.x = CGRectGetMinX(presentationRect) - (CGRectGetWidth(frame) + kTOActionSheetArrowHeight);
             break;
         case TOActionSheetArrowDirectionUp:
             frame.origin.y = CGRectGetMaxY(presentationRect) + kTOActionSheetArrowHeight;
@@ -986,26 +1021,46 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     CGRect frame = self.arrowImageView.frame;
     CGRect containerFrame = self.containerView.frame;
     CGRect containerBounds = self.containerView.bounds;
+    CGFloat offset = 0.0f;
     
     switch (direction) {
         case TOActionSheetArrowDirectionDown:
             frame.origin.y = CGRectGetHeight(containerFrame);
-            frame.origin.x = CGRectGetMidX(containerBounds) - (CGRectGetWidth(frame) * 0.5f);
+            
+            offset = CGRectGetMidX(presentationRect) - CGRectGetMidX(containerFrame);
+            frame.origin.x = (CGRectGetMidX(containerBounds) - (CGRectGetWidth(frame) * 0.5f)) + offset;
+            
             break;
         case TOActionSheetArrowDirectionRight:
-            frame.origin.y = CGRectGetMidY(containerBounds) - (CGRectGetHeight(frame) * 0.5f);
-            frame.origin.x = -kTOActionSheetArrowHeight;
+            offset = CGRectGetMidY(presentationRect) - CGRectGetMidY(containerFrame);
+            frame.origin.y = (CGRectGetMidY(containerBounds) - (CGRectGetHeight(frame) * 0.5f)) + offset;
+            frame.origin.x = CGRectGetWidth(containerBounds);
             break;
         case TOActionSheetArrowDirectionUp:
             frame.origin.y = -kTOActionSheetArrowHeight;
-            frame.origin.x = CGRectGetMidX(containerBounds) - (CGRectGetWidth(frame) * 0.5f);
+            
+            offset = CGRectGetMidX(presentationRect) - CGRectGetMidX(containerFrame);
+            frame.origin.x = (CGRectGetMidX(containerBounds) - (CGRectGetWidth(frame) * 0.5f)) + offset;
             break;
         case TOActionSheetArrowDirectionLeft:
-            frame.origin.y = CGRectGetMidY(containerBounds) - (CGRectGetHeight(frame) * 0.5f);
+            offset = CGRectGetMidY(presentationRect) - CGRectGetMidY(containerFrame);
+            frame.origin.y = (CGRectGetMidY(containerBounds) - (CGRectGetHeight(frame) * 0.5f)) + offset;
             frame.origin.x = -kTOActionSheetArrowHeight;
             break;
         default:
             break;
+    }
+    
+    //Cap the arrow so it doesn't go beyond the curved edges of the container view
+    if (direction == TOActionSheetArrowDirectionDown || direction == TOActionSheetArrowDirectionUp) {
+        frame.origin.x = MAX(kTOActionSheetBorderRadius, frame.origin.x);
+        CGFloat minX = (CGRectGetWidth(containerBounds) - kTOActionSheetBorderRadius) - kTOActionSheetArrowBase;
+        frame.origin.x = MIN(minX, frame.origin.x);
+    }
+    else if (direction == TOActionSheetArrowDirectionLeft || direction == TOActionSheetArrowDirectionRight) {
+        frame.origin.y = MAX(kTOActionSheetBorderRadius, frame.origin.y);
+        CGFloat minY = (CGRectGetHeight(containerBounds) - kTOActionSheetBorderRadius) - kTOActionSheetArrowBase;
+        frame.origin.y = MIN(minY, frame.origin.y);
     }
     
     return frame;

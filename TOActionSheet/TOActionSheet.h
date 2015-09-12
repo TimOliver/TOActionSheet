@@ -154,6 +154,12 @@ Optionally, the text for the 'Cancel' button.
  */
 @property (nonatomic, strong) UIFont *titleFont UI_APPEARANCE_SELECTOR;
 
+/**
+ Create a new instance of an action sheet, with the specified color style
+ 
+ @param style The desired color style
+ */
+- (instancetype)initWithStyle:(TOActionSheetStyle)style;
 
 /**
  Create a new instance of an action sheet, with a title as the top view

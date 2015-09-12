@@ -9,6 +9,6 @@ Pod::Spec.new do |s|
   s.platform = :ios, '7.0'
 
   s.source_files = 'TOActionSheet/**/*.{h,m}'
-  s.resources = 'TOActionSheet/*.lproj'
+  s.resources = 'TOActionSheet/**/*.lproj'
   s.requires_arc = true
 end

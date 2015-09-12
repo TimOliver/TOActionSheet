@@ -161,7 +161,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     _buttonFont = [UIFont boldSystemFontOfSize:16.0f];
     _titleFont = [UIFont systemFontOfSize:14.0f];
     _cancelButtonFont = [UIFont boldSystemFontOfSize:16.0f];
-    _cancelButtonTitle = NSLocalizedString(@"Cancel", @"");
+    _cancelButtonTitle = NSLocalizedStringFromTable(@"Cancel", @"TOActionSheetLocalizable", @"Cancel Button");
     [self setColorsForStyle:TOActionSheetStyleLight];
     
     //Caclulate width

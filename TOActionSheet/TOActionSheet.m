@@ -30,10 +30,10 @@ typedef NS_ENUM(NSInteger, TOActionSheetArrowDirection) {
     TOActionSheetArrowDirectionRight
 };
 
-const CGFloat kTOActionSheetButtonHeight  = 45.0f;
+const CGFloat kTOActionSheetButtonHeight  = 56.0f;
 const CGFloat kTOActionSheetDefaultWidth  = 300.0f;
-const CGFloat kTOActionSheetBorderRadius  = 7.0f;
-const CGFloat kTOActionSheetTitlePadding  = 10.0f;
+const CGFloat kTOActionSheetBorderRadius  = 15.0f;
+const CGFloat kTOActionSheetTitlePadding  = 15.0f;
 const CGFloat kTOActionSheetCompactMargin = 20.0f;
 const CGFloat kTOActionSheetArrowBase     = 36.0f;
 const CGFloat kTOActionSheetArrowHeight   = 13.0f;
@@ -169,9 +169,9 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 - (void)setUp
 {
     //Set initial theming properties
-    _buttonFont = [UIFont boldSystemFontOfSize:16.0f];
-    _titleFont = [UIFont systemFontOfSize:14.0f];
-    _cancelButtonFont = [UIFont boldSystemFontOfSize:16.0f];
+    _buttonFont = [UIFont systemFontOfSize:18.0f];
+    _titleFont = [UIFont systemFontOfSize:15.0f];
+    _cancelButtonFont = [UIFont boldSystemFontOfSize:18.0f];
     _cancelButtonTitle = NSLocalizedStringFromTable(@"Cancel", @"TOActionSheetLocalizable", @"Cancel Button");
     [self setColorsForStyle:_style];
     
@@ -199,7 +199,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         _destructiveButtonTappedBackgroundColor = [UIColor colorWithRed:0.6f green:0.0f blue:0.0f alpha:1.0f];
         _destructiveButtonTappedTextColor   = [UIColor colorWithWhite:1.0f alpha:1.0f];
         _buttonSeparatorColor               = [UIColor colorWithWhite:0.4f alpha:1.0f];
-        _headerBackgroundColor              = [UIColor colorWithWhite:0.3f alpha:1.0f];
+        _headerBackgroundColor              = [UIColor colorWithWhite:0.25f alpha:1.0f];
         _dimmingViewAlpha                   = 0.65f;
         _titleColor                         = [UIColor colorWithWhite:0.85f alpha:1.0f];
     }

@@ -32,7 +32,10 @@
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Deleted!" message:@"The thing was deleted!" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Okay!", nil];
         [alertView show];
     }];
-    
+    actionSheet.actionSheetDismissedBlock = ^{
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Dismissed!" message:@"The action sheet was dismissed!" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Okay!", nil];
+        [alertView show];
+    };
     UIButton *button = (UIButton *)sender;
     [actionSheet showFromView:button inView:self.navigationController.view];
 }

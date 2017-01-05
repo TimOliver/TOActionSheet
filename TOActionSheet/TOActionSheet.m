@@ -754,7 +754,10 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         self.containerView.frame = CGRectOffset(self.containerView.frame, 0.0f, offset);
         self.cancelButton.frame = CGRectOffset(self.cancelButton.frame, 0.0f, offset);
         self.backgroundColor = [UIColor clearColor];
-    } completion:^(BOOL complete) { [self removeFromSuperview]; }];
+    } completion:^(BOOL complete) {
+        [self removeFromSuperview];
+        self.actionSheetDismissedBlock();
+    }];
 }
 
 - (void)presentViewWithRegularAnimation
@@ -802,6 +805,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         self.backgroundColor = [UIColor clearColor];
      } completion:^(BOOL complete) {
          [self removeFromSuperview];
+         self.actionSheetDismissedBlock();
      }];
 }
 

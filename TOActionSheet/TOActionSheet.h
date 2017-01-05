@@ -60,6 +60,11 @@ Optionally, the text for the 'Cancel' button.
 @property (nonatomic, copy) NSString *cancelButtonTitle;
 
 /**
+ Optionally, a block that will be executed when the ActionSheet is dismissed.
+ */
+@property (nonatomic, copy) void (^actionSheetDismissedBlock)(void);
+
+/**
  Optionally, a block that will be executed when the 'Cancel' button is tapped.
  */
 @property (nonatomic, copy) void (^cancelButtonTappedBlock)(void);

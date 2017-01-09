@@ -18,6 +18,7 @@
 
 - (IBAction)didTapShow:(id)sender {
     TOActionSheet *actionSheet = [[TOActionSheet alloc] init];
+    actionSheet.titleAlignment = TOActionSheetTextAlignmentLeft;
     actionSheet.title = @"A thing needs to be done.\nAre you sure you want to do it?";
     actionSheet.style = (sender == self.darkButton) ? TOActionSheetStyleDark : TOActionSheetStyleLight;
     [actionSheet addButtonWithTitle:@"Do the thing" tappedBlock:^{

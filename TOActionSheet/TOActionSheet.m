@@ -454,6 +454,15 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         
         button.frame = buttonFrame;
         button.titleLabel.font = self.buttonFont;
+        if (self.titleAlignment == TOActionSheetTextAlignmentLeft) {
+            button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        } else if (self.titleAlignment == TOActionSheetTextAlignmentRight) {
+            button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+        } else {
+            button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        }
+        
+        
         [button setTitleColor:self.buttonTextColor forState:UIControlStateNormal];
         [button setTitleColor:self.buttonTappedTextColor forState:UIControlStateHighlighted];
         [button setTitle:title forState:UIControlStateNormal];
@@ -497,6 +506,14 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     
     [self.cancelButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
     
+    if (self.titleAlignment == TOActionSheetTextAlignmentLeft) {
+        self.cancelButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    } else if (self.titleAlignment == TOActionSheetTextAlignmentRight) {
+        self.cancelButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+    } else {
+        self.cancelButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    }
+    
     [self addSubview:self.cancelButton];
 }
 
@@ -521,6 +538,14 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     [self.destructiveButton setBackgroundImage:backgroundTappedImage forState:UIControlStateHighlighted];
     
     [self.destructiveButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    
+    if (self.titleAlignment == TOActionSheetTextAlignmentLeft) {
+        self.destructiveButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    } else if (self.titleAlignment == TOActionSheetTextAlignmentRight) {
+        self.destructiveButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+    } else {
+        self.destructiveButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    }
 }
 
 - (void)setUpSeparators
@@ -567,7 +592,13 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         titleLabel.text = self.title;
         titleLabel.font = self.titleFont;
         titleLabel.textColor = self.titleColor;
-        titleLabel.textAlignment = NSTextAlignmentCenter;
+        if (self.titleAlignment == TOActionSheetTextAlignmentLeft) {
+            titleLabel.textAlignment = NSTextAlignmentLeft;
+        } else if (self.titleAlignment == TOActionSheetTextAlignmentRight) {
+            titleLabel.textAlignment = NSTextAlignmentRight;
+        } else {
+            titleLabel.textAlignment = NSTextAlignmentCenter;
+        }
         titleLabel.numberOfLines = 0;
         titleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         

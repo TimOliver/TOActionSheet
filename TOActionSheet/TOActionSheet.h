@@ -44,11 +44,6 @@ typedef NS_ENUM(NSInteger, TOActionSheetStyle) {
  */
 @property (nonatomic, assign) TOActionSheetStyle style UI_APPEARANCE_SELECTOR;
 
-/**
- The text alignment for all text in the action sheet.
- */
-@property (nonatomic) NSTextAlignment textAlignment;
-
 /** 
  The alpha value of the dimming view behind the action sheet
  */

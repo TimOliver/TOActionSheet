@@ -456,6 +456,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         
         button.frame = buttonFrame;
         button.titleLabel.font = self.buttonFont;
+        
         [button setTitleColor:self.buttonTextColor forState:UIControlStateNormal];
         [button setTitleColor:self.buttonTappedTextColor forState:UIControlStateHighlighted];
         [button setTitle:title forState:UIControlStateNormal];

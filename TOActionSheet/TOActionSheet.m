@@ -461,13 +461,15 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         [button setTitleColor:self.buttonTappedTextColor forState:UIControlStateHighlighted];
         [button setTitle:title forState:UIControlStateNormal];
         
-        UIImage *icon = [[self.buttonIcons objectAtIndex:i] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        UIImageView *image = [[UIImageView alloc] initWithImage:icon];
-        image.tag = 123;
-        image.tintColor = self.buttonTextColor;
-        CGFloat size = (button.frame.size.height-image.frame.size.height)/2;
-        image.frame = (CGRect){size, size, image.frame.size.width, image.frame.size.height};
-        [button addSubview:image];
+        if ([self.buttonIcons objectAtIndex:i] != nil) {
+            UIImage *icon = [[self.buttonIcons objectAtIndex:i] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            UIImageView *image = [[UIImageView alloc] initWithImage:icon];
+            image.tag = 123;
+            image.tintColor = self.buttonTextColor;
+            CGFloat size = (button.frame.size.height-image.frame.size.height)/2;
+            image.frame = (CGRect){size, size, image.frame.size.width, image.frame.size.height};
+            [button addSubview:image];
+        }
         
         if (i == 0 && self.buttonTitles.count > 1 && (self.title.length == 0 && self.headerView == nil)) {
             UIImage *background = [self buttonBackgroundImageWithColor:self.buttonBackgroundColor roundedTop:YES roundedBottom:NO];
@@ -524,12 +526,14 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     [self.destructiveButton setTitleColor:self.destructiveButtonTappedTextColor forState:UIControlStateHighlighted];
     self.destructiveButton.titleLabel.font = self.buttonFont;
     
-    UIImage *icon = [self.destructiveIcon imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    UIImageView *image = [[UIImageView alloc] initWithImage:icon];
-    image.tintColor = self.destructiveButtonTextColor;
-    CGFloat size = (self.destructiveButton.frame.size.height-image.frame.size.height)/2;
-    image.frame = (CGRect){size, size, image.frame.size.width, image.frame.size.height};
-    [self.destructiveButton addSubview:image];
+    if (self.destructiveIcon != nil) {
+        UIImage *icon = [self.destructiveIcon imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        UIImageView *image = [[UIImageView alloc] initWithImage:icon];
+        image.tintColor = self.destructiveButtonTextColor;
+        CGFloat size = (self.destructiveButton.frame.size.height-image.frame.size.height)/2;
+        image.frame = (CGRect){size, size, image.frame.size.width, image.frame.size.height};
+        [self.destructiveButton addSubview:image];
+    }
     
     BOOL roundedTop = (self.buttonTitles.count == 0 && self.headerView == nil && self.title.length == 0);
     UIImage *backgroundImage = [self buttonBackgroundImageWithColor:self.destructiveButtonBackgroundColor roundedTop:roundedTop roundedBottom:YES];

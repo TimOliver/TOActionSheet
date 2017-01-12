@@ -20,6 +20,7 @@
     TOActionSheet *actionSheet = [[TOActionSheet alloc] init];
     actionSheet.title = @"A thing needs to be done.\nAre you sure you want to do it?";
     actionSheet.style = (sender == self.darkButton) ? TOActionSheetStyleDark : TOActionSheetStyleLight;
+    actionSheet.contentstyle = TOActionSheetContentStyleDefault;
     [actionSheet addButtonWithTitle:@"Do the thing" icon:[UIImage imageNamed:@"play"] tappedBlock:^{
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Done!" message:@"The thing was done!" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Okay!", nil];
         [alertView show];

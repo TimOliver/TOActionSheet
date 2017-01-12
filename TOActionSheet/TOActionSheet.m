@@ -461,14 +461,32 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         [button setTitleColor:self.buttonTappedTextColor forState:UIControlStateHighlighted];
         [button setTitle:title forState:UIControlStateNormal];
         
+        if (self.contentstyle == TOActionSheetContentStyleLeft) {
+            button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        } else if (self.contentstyle == TOActionSheetContentStyleRight) {
+            button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        } else {
+            button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        }
+        
         if ([self.buttonIcons objectAtIndex:i] != nil) {
             UIImage *icon = [[self.buttonIcons objectAtIndex:i] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             UIImageView *image = [[UIImageView alloc] initWithImage:icon];
             image.tag = 123;
             image.tintColor = self.buttonTextColor;
             CGFloat size = (button.frame.size.height-image.frame.size.height)/2;
-            image.frame = (CGRect){size, size, image.frame.size.width, image.frame.size.height};
+            if (self.contentstyle == TOActionSheetContentStyleRight) {
+                image.frame = (CGRect){button.frame.size.width-(10+image.frame.size.width), size, image.frame.size.width, image.frame.size.height};
+            } else {
+                image.frame = (CGRect){size, size, image.frame.size.width, image.frame.size.height};
+            }
             [button addSubview:image];
+            
+            if (self.contentstyle == TOActionSheetContentStyleLeft) {
+                [button setTitleEdgeInsets:UIEdgeInsetsMake(0, 50, 0, 0)];
+            } else if (self.contentstyle == TOActionSheetContentStyleRight) {
+                [button setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
+            }
         }
         
         if (i == 0 && self.buttonTitles.count > 1 && (self.title.length == 0 && self.headerView == nil)) {
@@ -526,13 +544,31 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     [self.destructiveButton setTitleColor:self.destructiveButtonTappedTextColor forState:UIControlStateHighlighted];
     self.destructiveButton.titleLabel.font = self.buttonFont;
     
+    if (self.contentstyle == TOActionSheetContentStyleLeft) {
+        self.destructiveButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    } else if (self.contentstyle == TOActionSheetContentStyleRight) {
+        self.destructiveButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    } else {
+        self.destructiveButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    }
+    
     if (self.destructiveIcon != nil) {
         UIImage *icon = [self.destructiveIcon imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         UIImageView *image = [[UIImageView alloc] initWithImage:icon];
         image.tintColor = self.destructiveButtonTextColor;
         CGFloat size = (self.destructiveButton.frame.size.height-image.frame.size.height)/2;
-        image.frame = (CGRect){size, size, image.frame.size.width, image.frame.size.height};
+        if (self.contentstyle == TOActionSheetContentStyleRight) {
+            image.frame = (CGRect){self.destructiveButton.frame.size.width-(10+image.frame.size.width), size, image.frame.size.width, image.frame.size.height};
+        } else {
+            image.frame = (CGRect){size, size, image.frame.size.width, image.frame.size.height};
+        }
         [self.destructiveButton addSubview:image];
+        
+        if (self.contentstyle == TOActionSheetContentStyleLeft) {
+            [self.destructiveButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 50, 0, 0)];
+        } else if (self.contentstyle == TOActionSheetContentStyleRight) {
+            [self.destructiveButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
+        }
     }
     
     BOOL roundedTop = (self.buttonTitles.count == 0 && self.headerView == nil && self.title.length == 0);

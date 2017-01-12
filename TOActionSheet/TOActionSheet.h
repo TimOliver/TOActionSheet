@@ -27,6 +27,12 @@ typedef NS_ENUM(NSInteger, TOActionSheetStyle) {
     TOActionSheetStyleDark
 };
 
+typedef NS_ENUM(NSInteger, TOActionSheetContentStyle) {
+    TOActionSheetContentStyleDefault,
+    TOActionSheetContentStyleLeft,
+    TOActionSheetContentStyleRight
+};
+
 @interface TOActionSheet : UIView
 
 /**
@@ -43,6 +49,11 @@ typedef NS_ENUM(NSInteger, TOActionSheetStyle) {
  The default style of this action sheet; whether light or dark.
  */
 @property (nonatomic, assign) TOActionSheetStyle style UI_APPEARANCE_SELECTOR;
+
+/**
+ The content style of this action sheet; whether default, left or right.
+ */
+@property (nonatomic, assign) TOActionSheetContentStyle contentstyle;
 
 /** 
  The alpha value of the dimming view behind the action sheet

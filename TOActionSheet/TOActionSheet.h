@@ -27,6 +27,12 @@ typedef NS_ENUM(NSInteger, TOActionSheetStyle) {
     TOActionSheetStyleDark
 };
 
+typedef NS_ENUM(NSInteger, TOActionSheetContentStyle) {
+    TOActionSheetContentStyleDefault,
+    TOActionSheetContentStyleLeft,
+    TOActionSheetContentStyleRight
+};
+
 @interface TOActionSheet : UIView
 
 /**
@@ -43,6 +49,11 @@ typedef NS_ENUM(NSInteger, TOActionSheetStyle) {
  The default style of this action sheet; whether light or dark.
  */
 @property (nonatomic, assign) TOActionSheetStyle style UI_APPEARANCE_SELECTOR;
+
+/**
+ The content style of this action sheet; whether default, left or right.
+ */
+@property (nonatomic, assign) TOActionSheetContentStyle contentstyle;
 
 /** 
  The alpha value of the dimming view behind the action sheet
@@ -185,11 +196,13 @@ Optionally, the text for the 'Cancel' button.
  @param title The title to display in the button
  @param tappedBlock A block that will be executed when the button is tapped
  */
+- (void)addButtonWithTitle:(NSString *)title icon:(UIImage *)icon tappedBlock:(void (^)(void))tappedBlock;
 - (void)addButtonWithTitle:(NSString *)title tappedBlock:(void (^)(void))tappedBlock;
 - (void)addButtonWithTitle:(NSString *)title atIndex:(NSInteger)index tappedBlock:(void (^)(void))tappedBlock;
 - (void)removeButtonAtIndex:(NSInteger)index;
 
 - (void)addDestructiveButtonWithTitle:(NSString *)title tappedBlock:(void (^)(void))tappedBlock;
+- (void)addDestructiveButtonWithTitle:(NSString *)title icon:(UIImage *)icon tappedBlock:(void (^)(void))tappedBlock;
 - (void)removeDestructiveButton;
 
 - (void)showFromRect:(CGRect)rect inView:(UIView *)view;

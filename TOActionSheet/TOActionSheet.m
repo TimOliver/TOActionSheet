@@ -814,7 +814,8 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         self.backgroundColor = [UIColor clearColor];
     } completion:^(BOOL complete) {
         [self removeFromSuperview];
-        self.actionSheetDismissedBlock();
+        if (self.actionSheetDismissedBlock)
+            self.actionSheetDismissedBlock();
     }];
 }
 
@@ -863,7 +864,8 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         self.backgroundColor = [UIColor clearColor];
      } completion:^(BOOL complete) {
          [self removeFromSuperview];
-         self.actionSheetDismissedBlock();
+         if (self.actionSheetDismissedBlock)
+             self.actionSheetDismissedBlock();
      }];
 }
 

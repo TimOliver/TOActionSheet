@@ -940,11 +940,14 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 #pragma mark - Button Configuration -
 - (void)addButtonWithTitle:(NSString *)title icon:(UIImage *)icon tappedBlock:(void (^)(void))tappedBlock
 {
-    if (self.buttonIcons == nil)
+    if (self.buttonIcons == nil) {
         self.buttonIcons = [NSMutableArray array];
-    
-    [self.buttonIcons insertObject:icon atIndex:self.buttonTitles.count];
-    
+    }
+
+    if (icon != nil) {
+        [self.buttonIcons insertObject:icon atIndex:self.buttonTitles.count];
+    }
+
     [self addButtonWithTitle:title atIndex:self.buttonTitles.count tappedBlock:tappedBlock];
 }
 

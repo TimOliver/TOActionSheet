@@ -229,7 +229,12 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 {
     [super layoutSubviews];
     [self setUpContainerWidth];
-    
+
+    CGFloat contentInset = 0.0f;
+    if (@available(iOS 11.0, *)) {
+        contentInset = self.safeAreaInsets.bottom;
+    }
+
     CGRect frame = CGRectZero;
     if (self.compactLayout) {
         self.arrowImageView.hidden = YES;
@@ -237,7 +242,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         frame = self.cancelButton.frame;
         frame.size.width = self.width;
         frame.origin.x = (self.frame.size.width - frame.size.width) * 0.5f;
-        frame.origin.y = (self.frame.size.height - kTOActionSheetCompactMargin) - frame.size.height;
+        frame.origin.y = (self.frame.size.height - (kTOActionSheetCompactMargin + contentInset)) - frame.size.height;
         self.cancelButton.frame = frame;
         
         frame = self.containerView.frame;
@@ -781,6 +786,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 - (void)presentViewWithCompactAnimation
 {
     CGFloat offset = self.frame.size.height - self.containerView.frame.origin.y;
+
     CGRect containerFrame = self.containerView.frame;
     self.containerView.frame = CGRectOffset(self.containerView.frame, 0.0f, offset);
     

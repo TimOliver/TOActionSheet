@@ -1,7 +1,7 @@
 //
 //  TOActionSheet.m
 //
-//  Copyright 2015 Timothy Oliver. All rights reserved.
+//  Copyright 2015-2017 Timothy Oliver. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to
@@ -81,49 +81,6 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 
 /* The direction of the arrow graphic in regular mode */
 @property (nonatomic, assign) TOActionSheetArrowDirection arrowDirection;
-
-/* View setup */
-- (void)setUp;
-- (void)setColorsForStyle:(TOActionSheetStyle)style;
-- (void)show;
-
-/* Content views setup */
-- (void)setUpContainerWidth;
-- (void)setUpContainer;
-- (void)setUpDimmingView;
-- (void)setUpRegularButtons;
-- (void)setUpCancelButton;
-- (void)setUpHeaderView;
-- (void)setUpDestructiveButton;
-- (void)setUpSeparators;
-
-/* User interaction */
-- (void)buttonTapped:(id)sender;
-- (void)buttonTapDown:(id)sender;
-- (void)buttonTapUp:(id)sender;
-
-- (void)dimmingViewTapped:(id)sender;
-
-/* Presentation/Dismissal Animations */
-- (void)presentViewWithCompactAnimation;
-- (void)dismissViewWithCompactAnimation;
-
-- (void)presentViewWithRegularAnimation;
-- (void)dismissViewWithRegularAnimation;
-
-/* Layout Calculations for Regular mode */
-- (TOActionSheetArrowDirection)bestArrowDirectionForPresentationRect:(CGRect)presentationRect;
-- (CGRect)frameOfContainerViewWithArrowDirection:(TOActionSheetArrowDirection)direction presentationRect:(CGRect)presentationRect;
-- (CGRect)frameOfArrowViewWithDirection:(TOActionSheetArrowDirection)direction presentationRect:(CGRect)presentationRect;
-- (UIColor *)bestColorForArrowWithDirection:(TOActionSheetArrowDirection)direction;
-
-/* Image asset generation */
-- (UIImage *)buttonBackgroundImageWithColor:(UIColor *)color roundedTop:(BOOL)roundedTop roundedBottom:(BOOL)roundedBottom;
-- (UIImage *)buttonBackgroundImageWithColor:(UIColor *)color; //Generates 1x1 art for square buttons
-- (UIImage *)arrowImageForDirection:(TOActionSheetArrowDirection)direction color:(UIColor *)color;
-
-- (void)deviceWillChangeOrientation:(NSNotification *)notification;
-- (void)presentViewAfterSizeTransition;
 
 @end
 
@@ -280,8 +237,9 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 
 - (void)deviceWillChangeOrientation:(NSNotification *)notification
 {
-    if (self.compactLayout)
+    if (self.compactLayout) {
         return;
+    }
     
     [self presentViewAfterSizeTransition];
 }
@@ -309,12 +267,14 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     
     //Calculate which corners need rounding
     UIRectCorner corners = 0;
-    if (roundedTop)
+    if (roundedTop) {
         corners |= (UIRectCornerTopLeft | UIRectCornerTopRight);
-    
-    if (roundedBottom)
+    }
+        
+    if (roundedBottom) {
         corners |= (UIRectCornerBottomLeft | UIRectCornerBottomRight);
-    
+    }
+        
     UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect
                                                byRoundingCorners:corners
                                                      cornerRadii:(CGSize){kTOActionSheetBorderRadius, kTOActionSheetBorderRadius}];
@@ -351,11 +311,13 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 - (UIImage *)arrowImageForDirection:(TOActionSheetArrowDirection)direction color:(UIColor *)color
 {
     CGSize size = CGSizeZero;
-    if (direction == TOActionSheetArrowDirectionDown || direction == TOActionSheetArrowDirectionUp)
+    if (direction == TOActionSheetArrowDirectionDown || direction == TOActionSheetArrowDirectionUp) {
         size = (CGSize){kTOActionSheetArrowBase, kTOActionSheetArrowHeight};
-    else
+    }
+    else {
         size = (CGSize){kTOActionSheetArrowHeight, kTOActionSheetArrowBase};
-    
+    }
+        
     CGRect arrowRect = (CGRect){CGPointZero, size};
     
     UIImage *image = nil;
@@ -432,13 +394,15 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     
     // See if we need to generate graphics for buttons in-between the top and bottom rounded ones
     NSInteger numberOfElements = 0;
-    if (self.headerView || self.title.length)
+    if (self.headerView || self.title.length) {
         numberOfElements++;
+    }
     
     numberOfElements += self.buttonTitles.count;
     
-    if (self.destructiveTitle)
+    if (self.destructiveTitle) {
         numberOfElements++;
+    }
     
     UIImage *regularBG = nil;
     UIImage *regularTappedBG = nil;
@@ -538,8 +502,9 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 
 - (void)setUpDestructiveButton
 {
-    if (self.destructiveTitle.length == 0)
+    if (self.destructiveTitle.length == 0) {
         return;
+    }
     
     self.destructiveButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.destructiveButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -589,8 +554,9 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 - (void)setUpSeparators
 {
     NSInteger numberOfSeparators = 0;
-    if (self.headerView || self.title.length)
+    if (self.headerView || self.title.length) {
         numberOfSeparators++;
+    }
     
     numberOfSeparators += (self.buttonTitles.count - 1);
     
@@ -607,8 +573,9 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 
 - (void)setUpHeaderView
 {
-    if (self.headerView == nil && self.title.length == 0)
+    if (self.headerView == nil && self.title.length == 0) {
         return;
+    }
     
     UIImage *backgroundImage = [self buttonBackgroundImageWithColor:self.headerBackgroundColor roundedTop:YES roundedBottom:NO];
     self.headerBackgroundView = [[UIImageView alloc] initWithImage:backgroundImage];
@@ -661,9 +628,10 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     CGFloat width = MIN(self.frame.size.width, self.frame.size.height);
     width -= 20.0f; //10 point padding on either side
     
-    if (self.maximumCompactWidth > FLT_EPSILON)
+    if (self.maximumCompactWidth > FLT_EPSILON) {
         width = MIN(self.maximumCompactWidth,width);
-    
+    }
+        
     self.width = width;
 }
 
@@ -705,10 +673,12 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     }
     
     //Add the separators
-    if (self.headerBackgroundView)
+    if (self.headerBackgroundView) {
         height = self.headerBackgroundView.frame.size.height;
-    else
+    }
+    else {
         height = kTOActionSheetButtonHeight;
+    }
         
     for (UIView *separatorView in self.separatorViews) {
         frame = separatorView.frame;
@@ -799,7 +769,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     } completion:nil];
     
     //animate the cancel button
-    [UIView animateWithDuration:0.4f delay:0.1f usingSpringWithDamping:0.7f initialSpringVelocity:0.5f options:UIViewAnimationOptionAllowUserInteraction animations:^{
+    [UIView animateWithDuration:0.4f delay:0.03f usingSpringWithDamping:0.7f initialSpringVelocity:0.5f options:UIViewAnimationOptionAllowUserInteraction animations:^{
         self.cancelButton.frame = cancelButtonFrame;
     } completion:nil];
     
@@ -820,8 +790,9 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         self.backgroundColor = [UIColor clearColor];
     } completion:^(BOOL complete) {
         [self removeFromSuperview];
-        if (self.actionSheetDismissedBlock)
+        if (self.actionSheetDismissedBlock) {
             self.actionSheetDismissedBlock();
+        }
     }];
 }
 
@@ -870,8 +841,9 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         self.backgroundColor = [UIColor clearColor];
      } completion:^(BOOL complete) {
          [self removeFromSuperview];
-         if (self.actionSheetDismissedBlock)
+         if (self.actionSheetDismissedBlock) {
              self.actionSheetDismissedBlock();
+         }
      }];
 }
 
@@ -879,12 +851,14 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 - (void)buttonTapped:(id)sender
 {
     if (sender == self.cancelButton) {
-        if (self.cancelButtonTappedBlock)
+        if (self.cancelButtonTappedBlock) {
             self.cancelButtonTappedBlock();
+        }
     }
     else if (sender == self.destructiveButton) {
-        if (self.destructiveBlock)
+        if (self.destructiveBlock) {
             self.destructiveBlock();
+        }
     }
     else {
         NSInteger index = [self.buttonViews indexOfObject:sender];
@@ -895,10 +869,12 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         }
     }
     
-    if (self.compactLayout)
+    if (self.compactLayout) {
         [self dismissViewWithCompactAnimation];
-    else
+    }
+    else {
         [self dismissViewWithRegularAnimation];
+    }
 }
 
 - (void)buttonTapDown:(id)sender
@@ -937,10 +913,12 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     if (CGRectContainsPoint(self.containerView.frame, tapPoint))
         return;
     
-    if (self.compactLayout)
+    if (self.compactLayout) {
         [self dismissViewWithCompactAnimation];
-    else
+    }
+    else {
         [self dismissViewWithRegularAnimation];
+    }
 }
 
 #pragma mark - Button Configuration -
@@ -1016,13 +994,15 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 - (BOOL)compactLayout
 {
     //iOS 7
-    if ([self respondsToSelector:NSSelectorFromString(@"traitCollection")] == NO)
+    if ([self respondsToSelector:NSSelectorFromString(@"traitCollection")] == NO) {
         return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone);
+    }
     
     //iOS 8+
     UITraitCollection *traitCollection = self.parentView.traitCollection;
-    if (traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    if (traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
         return YES;
+    }
     
     return (traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact);
 }
@@ -1034,8 +1014,9 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 
 - (CGRect)presentationRect
 {
-    if (CGRectIsEmpty(self.targetRect) == NO)
+    if (CGRectIsEmpty(self.targetRect) == NO) {
         return self.targetRect;
+    }
     
     if (self.targetView) {
         CGRect frame = self.targetView.frame;
@@ -1060,14 +1041,18 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     CGFloat width = kTOActionSheetDefaultWidth + kTOActionSheetArrowHeight;
     
     //Go in a counter-clockwise direction
-    if (CGRectGetMinY(presentationRect) - height > 0)
+    if (CGRectGetMinY(presentationRect) - height > 0) {
         return TOActionSheetArrowDirectionDown; //Appears on top
-    else if (CGRectGetMinX(presentationRect) - width > 0)
+    }
+    else if (CGRectGetMinX(presentationRect) - width > 0) {
         return TOActionSheetArrowDirectionRight; //Left hand side
-    else if (CGRectGetMaxX(presentationRect) + width <= CGRectGetWidth(self.frame))
+    }
+    else if (CGRectGetMaxX(presentationRect) + width <= CGRectGetWidth(self.frame)) {
         return TOActionSheetArrowDirectionLeft;
-    else if (CGRectGetMaxY(presentationRect) + width <= CGRectGetHeight(self.frame))
+    }
+    else if (CGRectGetMaxY(presentationRect) + width <= CGRectGetHeight(self.frame)) {
         return TOActionSheetArrowDirectionUp;
+    }
 
     return TOActionSheetArrowDirectionNone;
 }
@@ -1099,18 +1084,22 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     }
     
     //make sure the frame doens't leave the container bounds
-    if (frame.origin.x < kTOActionSheetScreenPadding)
+    if (frame.origin.x < kTOActionSheetScreenPadding) {
         frame.origin.x = kTOActionSheetScreenPadding;
+    }
     
-    if (frame.origin.y < kTOActionSheetScreenPadding)
+    if (frame.origin.y < kTOActionSheetScreenPadding) {
         frame.origin.y = kTOActionSheetScreenPadding;
+    }
     
-    if (CGRectGetMaxX(frame) > (boundSize.width - kTOActionSheetScreenPadding))
+    if (CGRectGetMaxX(frame) > (boundSize.width - kTOActionSheetScreenPadding)) {
         frame.origin.x = (boundSize.width - kTOActionSheetScreenPadding) - CGRectGetWidth(frame);
-    
-    if (CGRectGetMaxY(frame) > (boundSize.height - kTOActionSheetScreenPadding))
+    }
+        
+    if (CGRectGetMaxY(frame) > (boundSize.height - kTOActionSheetScreenPadding)) {
         frame.origin.y = (boundSize.height - kTOActionSheetScreenPadding) - CGRectGetHeight(frame);
-    
+    }
+        
     return frame;
 }
 
@@ -1168,21 +1157,24 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 {
     switch (direction) {
         case TOActionSheetArrowDirectionDown:
-            if (self.destructiveTitle)
+            if (self.destructiveTitle) {
                 return self.destructiveButtonBackgroundColor;
-            
-            if (self.buttonTitles.count)
+            }
+                
+            if (self.buttonTitles.count) {
                 return self.buttonBackgroundColor;
-            
+            }
+                
             return self.headerBackgroundColor;
             break;
         case TOActionSheetArrowDirectionLeft:
         case TOActionSheetArrowDirectionRight:
             return self.buttonBackgroundColor;
         case TOActionSheetArrowDirectionUp:
-            if (self.headerView || self.title.length)
+            if (self.headerView || self.title.length) {
                 return self.headerBackgroundColor;
-            
+            }
+                
             return self.buttonBackgroundColor;
         default:
             break;
@@ -1194,9 +1186,10 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 #pragma mark - Accessors -
 - (void)setStyle:(TOActionSheetStyle)style
 {
-    if (style == _style)
+    if (style == _style) {
         return;
-    
+    }
+        
     _style = style;
     [self setColorsForStyle:_style];
 }

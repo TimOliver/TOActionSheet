@@ -379,6 +379,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         CGContextSetFillColorWithColor(context, color.CGColor);
         CGContextAddPath(context, arrowPath);
         CGContextFillPath(context);
+        CGPathRelease(arrowPath);
         
         image = UIGraphicsGetImageFromCurrentImageContext();
     }
@@ -864,7 +865,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         NSInteger index = [self.buttonViews indexOfObject:sender];
         [sender viewWithTag:123].tintColor = self.buttonTappedTextColor;
         if (index != NSNotFound) {
-            void (^buttonBlock)() = self.buttonBlocks[index];
+            void (^buttonBlock)(void) = self.buttonBlocks[index];
             buttonBlock();
         }
     }

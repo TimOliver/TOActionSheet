@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'TOActionSheet'
-  s.version  = '1.0.2'
+  s.version  = '1.0.3'
   s.license  =  { :type => 'MIT', :file => 'LICENSE' }
   s.summary  = 'A modal prompt UI control, similar to UIActionSheet.'
   s.homepage = 'https://github.com/TimOliver/TOActionSheet'

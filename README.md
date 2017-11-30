@@ -21,3 +21,8 @@ iOS 7.0 or above.
 ## License
 
 `TOActionSheet` is licensed under the MIT License, please see the LICENSE file. ![analytics](https://ga-beacon.appspot.com/UA-5643664-16/TOActionSheet/README.md?pixel)
+
+## Support on Beerpay
+Hey dude! Help me out for a couple of :beers:!
+
+[![Beerpay](https://beerpay.io/TimOliver/TOActionSheet/badge.svg?style=beer-square)](https://beerpay.io/TimOliver/TOActionSheet)  [![Beerpay](https://beerpay.io/TimOliver/TOActionSheet/make-wish.svg?style=flat-square)](https://beerpay.io/TimOliver/TOActionSheet?focus=wish)

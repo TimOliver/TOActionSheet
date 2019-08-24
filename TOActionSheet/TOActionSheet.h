@@ -56,9 +56,19 @@ typedef NS_ENUM(NSInteger, TOActionSheetContentStyle) {
 @property (nonatomic, assign) TOActionSheetContentStyle contentstyle;
 
 /** 
- The alpha value of the dimming view behind the action sheet
+ The alpha value of the dimming view behind the action sheet (Default is 0.0f)
  */
 @property (nonatomic, assign) CGFloat dimmingViewAlpha UI_APPEARANCE_SELECTOR;
+
+/**
+ The alpha value of the shadow behind the action sheet.
+ */
+@property (nonatomic, assign) CGFloat shadowOpacity  UI_APPEARANCE_SELECTOR;
+
+/**
+ The radius of the shadow behind the action sheet.
+ */
+@property (nonatomic, assign) CGFloat shadowRadius  UI_APPEARANCE_SELECTOR;
 
 /** 
  The maximum width of the action sheet when it is presented in compact mode

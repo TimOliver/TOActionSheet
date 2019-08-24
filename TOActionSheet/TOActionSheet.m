@@ -159,8 +159,10 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         _destructiveButtonTappedTextColor   = [UIColor colorWithWhite:1.0f alpha:1.0f];
         _buttonSeparatorColor               = [UIColor colorWithWhite:0.4f alpha:1.0f];
         _headerBackgroundColor              = [UIColor colorWithWhite:0.25f alpha:1.0f];
-        _dimmingViewAlpha                   = 0.65f;
+        _dimmingViewAlpha                   = 0.0f;
         _titleColor                         = [UIColor colorWithWhite:0.85f alpha:1.0f];
+        _shadowOpacity                      = 0.4f;
+        _shadowRadius                       = 100.0f;
     }
     else {
         _buttonBackgroundColor              = [UIColor colorWithWhite:1.0f alpha:1.0f];
@@ -176,9 +178,11 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         _destructiveButtonTappedBackgroundColor = [UIColor colorWithRed:0.8f green:0.0f blue:0.0f alpha:1.0f];
         _destructiveButtonTappedTextColor   = [UIColor colorWithWhite:1.0f alpha:1.0f];
         _buttonSeparatorColor               = [UIColor colorWithWhite:0.9f alpha:1.0f];
-        _headerBackgroundColor              = [UIColor colorWithWhite:0.95f alpha:1.0f];
-        _dimmingViewAlpha                   = 0.3f;
+        _headerBackgroundColor              = [UIColor colorWithWhite:0.97f alpha:1.0f];
+        _dimmingViewAlpha                   = 0.0f;
         _titleColor                         = [UIColor blackColor];
+        _shadowOpacity                      = 0.25f;
+        _shadowRadius                       = 100.0f;
     }
 }
 
@@ -233,6 +237,23 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     }
     
     self.cancelButton.hidden = !self.compactLayout;
+
+    //set up shadows for these elements
+    if (self.shadowOpacity > 0.0f) {
+        [self configureShadowForView:self.containerView];
+        [self configureShadowForView:self.cancelButton];
+    }
+}
+
+- (void)configureShadowForView:(UIView *)view
+{
+    CALayer *layer = view.layer;
+    layer.shadowColor = [UIColor blackColor].CGColor;
+    layer.shadowOpacity = self.shadowOpacity;
+    layer.shadowRadius = self.shadowRadius;
+    layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:view.bounds
+                                                  cornerRadius:kTOActionSheetBorderRadius].CGPath;
 }
 
 - (void)deviceWillChangeOrientation:(NSNotification *)notification
@@ -1028,7 +1049,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         UIView *view = [self.targetButtonItem valueForKey:@"view"];
         if (view) {
             CGRect frame = view.frame;
-            return [self.targetView.superview convertRect:frame toView:self];
+            return [view.superview convertRect:frame toView:self];
         }
     }
     

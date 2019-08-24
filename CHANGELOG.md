@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 1.0.4 - 2019-08-24
+
+- Fixed a `UIBarButtonItem` display bug.
+- Added shadows to provide contrast.
+- Disabled dimming view in favor of shadows.
+
 ## 1.0.3 - 2017-11-21
 
 ### Added 

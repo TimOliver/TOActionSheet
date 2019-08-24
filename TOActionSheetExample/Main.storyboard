@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8173.3" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="1pI-eh-bid">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14865.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="1pI-eh-bid">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8142"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14819.2"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -11,7 +12,7 @@
             <objects>
                 <navigationController id="1pI-eh-bid" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="u7n-Zx-OZP">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -31,40 +32,40 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qit-KD-WUL">
-                                <rect key="frame" x="200" y="250" width="201" height="100"/>
+                                <rect key="frame" x="106.5" y="398" width="201" height="100"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GX4-d9-aES">
-                                        <rect key="frame" x="11" y="8" width="178" height="30"/>
+                                        <rect key="frame" x="0.5" y="8" width="200" height="30"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="178" id="KfV-9F-F7h"/>
+                                            <constraint firstAttribute="width" constant="200" id="KfV-9F-F7h"/>
                                             <constraint firstAttribute="height" constant="30" id="z8w-zH-pCP"/>
                                         </constraints>
                                         <state key="normal" title="Show Action Sheet (Light)">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <action selector="didTapShow:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cug-dM-tDG"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a7w-Rm-uSc">
-                                        <rect key="frame" x="11" y="61" width="176" height="30"/>
+                                        <rect key="frame" x="0.5" y="61" width="200" height="30"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="176" id="BEZ-BQ-nFp"/>
+                                            <constraint firstAttribute="width" constant="200" id="BEZ-BQ-nFp"/>
                                             <constraint firstAttribute="height" constant="30" id="baf-LI-Bzi"/>
                                         </constraints>
                                         <state key="normal" title="Show Action Sheet (Dark)">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <action selector="didTapShow:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0Dw-tE-86P"/>
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="GX4-d9-aES" firstAttribute="leading" secondItem="a7w-Rm-uSc" secondAttribute="leading" id="46f-7x-Eck"/>
                                     <constraint firstItem="GX4-d9-aES" firstAttribute="centerX" secondItem="qit-KD-WUL" secondAttribute="centerX" id="FtL-6j-P7q"/>
@@ -75,7 +76,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="qit-KD-WUL" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Ibg-No-SGo"/>
                             <constraint firstItem="qit-KD-WUL" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="dFC-zN-Dlx"/>

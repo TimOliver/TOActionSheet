@@ -22,20 +22,16 @@
     actionSheet.style = (sender == self.darkButton) ? TOActionSheetStyleDark : TOActionSheetStyleLight;
     actionSheet.contentstyle = TOActionSheetContentStyleDefault;
     [actionSheet addButtonWithTitle:@"Do the thing" icon:nil tappedBlock:^{
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Done!" message:@"The thing was done!" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Okay!", nil];
-        [alertView show];
+        NSLog(@"Done!");
     }];
     [actionSheet addButtonWithTitle:@"Do another thing" icon:nil tappedBlock:^{
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Done!" message:@"The other thing was done!" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Okay!", nil];
-        [alertView show];
+        NSLog(@"Done!");
     }];
     [actionSheet addDestructiveButtonWithTitle:@"Delete the thing" icon:nil tappedBlock:^{
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Deleted!" message:@"The thing was deleted!" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Okay!", nil];
-        [alertView show];
+        NSLog(@"Deleted!");
     }];
     actionSheet.actionSheetDismissedBlock = ^{
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Dismissed!" message:@"The action sheet was dismissed!" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Okay!", nil];
-        [alertView show];
+        NSLog(@"Dismissed!");
     };
     UIButton *button = (UIButton *)sender;
     [actionSheet showFromView:button inView:self.navigationController.view];

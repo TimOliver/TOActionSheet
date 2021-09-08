@@ -18,18 +18,31 @@
 
 - (IBAction)didTapShow:(id)sender {
     TOActionSheet *actionSheet = [[TOActionSheet alloc] init];
-    actionSheet.title = @"A thing needs to be done.\nAre you sure you want to do it?";
+    actionSheet.title = nil;
     actionSheet.style = (sender == self.darkButton) ? TOActionSheetStyleDark : TOActionSheetStyleLight;
-    actionSheet.contentstyle = TOActionSheetContentStyleDefault;
-    [actionSheet addButtonWithTitle:@"Do the thing" icon:nil tappedBlock:^{
-        NSLog(@"Done!");
+    actionSheet.buttonBackgroundColor = [UIColor clearColor];
+    actionSheet.buttonTappedBackgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.5];
+    actionSheet.cancelButtonBackgroundColor = [UIColor whiteColor];
+    actionSheet.cancelButtonTappedBackgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.5];
+    actionSheet.cancelButtonTextColor = [UIColor lightGrayColor];
+    actionSheet.cancelButtonTappedTextColor = [UIColor darkGrayColor];
+    actionSheet.shadowRadius = 16.0;
+    
+    NSTextAttachment *attacment = [NSTextAttachment new];
+    attacment.image = [UIImage imageNamed:@"play"];
+    attacment.bounds = CGRectMake(0, 0, 10, 12);
+    
+    NSMutableAttributedString *phone1Atrr = (NSMutableAttributedString *)[NSMutableAttributedString attributedStringWithAttachment:attacment];
+    [phone1Atrr appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"  12332233" attributes:@{NSForegroundColorAttributeName: [UIColor redColor]}]];
+    [phone1Atrr appendAttributedString:[[NSAttributedString alloc] initWithString:@" (custom Service)" attributes:@{NSForegroundColorAttributeName: [UIColor lightGrayColor]}]];
+    
+    [actionSheet addButtonWithAttibuteStr:phone1Atrr icon:nil tappedBlock:^{
+        NSLog(@"Done1!");
     }];
-    [actionSheet addButtonWithTitle:@"Do another thing" icon:nil tappedBlock:^{
-        NSLog(@"Done!");
+    [actionSheet addButtonWithAttibuteStr:phone1Atrr icon:nil tappedBlock:^{
+        NSLog(@"Done2!");
     }];
-    [actionSheet addDestructiveButtonWithTitle:@"Delete the thing" icon:nil tappedBlock:^{
-        NSLog(@"Deleted!");
-    }];
+
     actionSheet.actionSheetDismissedBlock = ^{
         NSLog(@"Dismissed!");
     };

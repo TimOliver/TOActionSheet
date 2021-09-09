@@ -18,6 +18,7 @@
 
 - (IBAction)didTapShow:(id)sender {
     TOActionSheet *actionSheet = [[TOActionSheet alloc] init];
+    kTOActionSheetCompactMargin = 10;
     actionSheet.title = nil;
     actionSheet.style = (sender == self.darkButton) ? TOActionSheetStyleDark : TOActionSheetStyleLight;
     actionSheet.buttonBackgroundColor = [UIColor clearColor];

@@ -32,9 +32,9 @@ typedef NS_ENUM(NSInteger, TOActionSheetArrowDirection) {
 
 const CGFloat kTOActionSheetButtonHeight  = 56.0f;
 const CGFloat kTOActionSheetDefaultWidth  = 300.0f;
-const CGFloat kTOActionSheetBorderRadius  = 15.0f;
+CGFloat kTOActionSheetBorderRadius  = 15.0f;
 const CGFloat kTOActionSheetTitlePadding  = 15.0f;
-const CGFloat kTOActionSheetCompactMargin = 20.0f;
+CGFloat kTOActionSheetCompactMargin = 20.0f;
 const CGFloat kTOActionSheetArrowBase     = 36.0f;
 const CGFloat kTOActionSheetArrowHeight   = 13.0f;
 const CGFloat kTOActionSheetScreenPadding = 20.0f;

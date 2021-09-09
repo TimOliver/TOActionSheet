@@ -33,6 +33,9 @@ typedef NS_ENUM(NSInteger, TOActionSheetContentStyle) {
     TOActionSheetContentStyleRight
 };
 
+extern CGFloat kTOActionSheetBorderRadius;
+extern CGFloat kTOActionSheetCompactMargin;
+
 @interface TOActionSheet : UIView
 
 /**

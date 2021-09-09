@@ -33,6 +33,9 @@ typedef NS_ENUM(NSInteger, TOActionSheetContentStyle) {
     TOActionSheetContentStyleRight
 };
 
+extern CGFloat kTOActionSheetBorderRadius;
+extern CGFloat kTOActionSheetCompactMargin;
+
 @interface TOActionSheet : UIView
 
 /**
@@ -206,14 +209,10 @@ Optionally, the text for the 'Cancel' button.
  @param title The title to display in the button
  @param tappedBlock A block that will be executed when the button is tapped
  */
-- (void)addButtonWithTitle:(NSString *)title icon:(UIImage *)icon tappedBlock:(void (^)(void))tappedBlock;
-- (void)addButtonWithTitle:(NSString *)title tappedBlock:(void (^)(void))tappedBlock;
-- (void)addButtonWithTitle:(NSString *)title atIndex:(NSInteger)index tappedBlock:(void (^)(void))tappedBlock;
+- (void)addButtonWithAttibuteStr:(NSAttributedString *)title icon:(UIImage *)icon tappedBlock:(void (^)(void))tappedBlock;
+- (void)addButtonWithAttibuteStr:(NSAttributedString *)title tappedBlock:(void (^)(void))tappedBlock;
+- (void)addButtonWithAttibuteStr:(NSAttributedString *)title atIndex:(NSInteger)index tappedBlock:(void (^)(void))tappedBlock;
 - (void)removeButtonAtIndex:(NSInteger)index;
-
-- (void)addDestructiveButtonWithTitle:(NSString *)title tappedBlock:(void (^)(void))tappedBlock;
-- (void)addDestructiveButtonWithTitle:(NSString *)title icon:(UIImage *)icon tappedBlock:(void (^)(void))tappedBlock;
-- (void)removeDestructiveButton;
 
 - (void)showFromRect:(CGRect)rect inView:(UIView *)view;
 - (void)showFromView:(UIView *)fromView inView:(UIView *)view;

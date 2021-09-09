@@ -32,9 +32,9 @@ typedef NS_ENUM(NSInteger, TOActionSheetArrowDirection) {
 
 const CGFloat kTOActionSheetButtonHeight  = 56.0f;
 const CGFloat kTOActionSheetDefaultWidth  = 300.0f;
-const CGFloat kTOActionSheetBorderRadius  = 15.0f;
+CGFloat kTOActionSheetBorderRadius  = 15.0f;
 const CGFloat kTOActionSheetTitlePadding  = 15.0f;
-const CGFloat kTOActionSheetCompactMargin = 20.0f;
+CGFloat kTOActionSheetCompactMargin = 20.0f;
 const CGFloat kTOActionSheetArrowBase     = 36.0f;
 const CGFloat kTOActionSheetArrowHeight   = 13.0f;
 const CGFloat kTOActionSheetScreenPadding = 20.0f;
@@ -55,17 +55,13 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 @property (nonatomic, strong) NSMutableArray *buttonIcons;
 @property (nonatomic, strong) NSMutableArray *buttonBlocks;
 
-@property (nonatomic, copy) NSString *destructiveTitle;
-@property (nonatomic, copy) UIImage *destructiveIcon;
-@property (nonatomic, copy) void (^destructiveBlock)(void);
-
 /* The views of each button */
 @property (nonatomic, strong) NSMutableArray *buttonViews;
 @property (nonatomic, strong) UIButton *cancelButton;
-@property (nonatomic, strong) UIButton *destructiveButton;
 @property (nonatomic, strong) NSMutableArray *separatorViews;
 
 /* The views used to construct the view hierarchy */
+@property (nonatomic, strong) UIView *shadowView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UIView *headerBackgroundView;
 @property (nonatomic, strong) UIImageView *arrowImageView;
@@ -211,12 +207,14 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         frame.origin.x = (self.frame.size.width - frame.size.width) * 0.5f;
         frame.origin.y = (self.cancelButton.frame.origin.y - kTOActionSheetCompactMargin) - frame.size.height;
         self.containerView.frame = frame;
+        self.shadowView.frame = self.containerView.frame;
     }
     else {
         //make sure the frame is reset to standard
         frame = self.containerView.frame;
         frame.size.width = self.width;
         self.containerView.frame = frame;
+        self.shadowView.frame = self.containerView.frame;
         
         CGRect presentationRect = self.presentationRect;
         TOActionSheetArrowDirection direction = [self bestArrowDirectionForPresentationRect:presentationRect];
@@ -233,6 +231,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         
         self.arrowImageView.hidden = NO;
         self.containerView.frame = [self frameOfContainerViewWithArrowDirection:self.arrowDirection presentationRect:presentationRect];
+        self.shadowView.frame = self.containerView.frame;
         self.arrowImageView.frame = [self frameOfArrowViewWithDirection:self.arrowDirection presentationRect:presentationRect];
     }
     
@@ -240,7 +239,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 
     //set up shadows for these elements
     if (self.shadowOpacity > 0.0f) {
-        [self configureShadowForView:self.containerView];
+        [self configureShadowForView:self.shadowView];
         [self configureShadowForView:self.cancelButton];
     }
 }
@@ -412,31 +411,15 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 #pragma mark - Action Sheet Views Set-up -
 - (void)setUpRegularButtons
 {
-    CGRect buttonFrame = (CGRect){0,0,self.width,kTOActionSheetButtonHeight};
+    CGRect buttonFrame = (CGRect){0, 0, self.width, kTOActionSheetButtonHeight};
     
-    // See if we need to generate graphics for buttons in-between the top and bottom rounded ones
-    NSInteger numberOfElements = 0;
-    if (self.headerView || self.title.length) {
-        numberOfElements++;
-    }
-    
-    numberOfElements += self.buttonTitles.count;
-    
-    if (self.destructiveTitle) {
-        numberOfElements++;
-    }
-    
-    UIImage *regularBG = nil;
-    UIImage *regularTappedBG = nil;
-    if (numberOfElements >= 3) {
-        regularBG = [self buttonBackgroundImageWithColor:self.buttonBackgroundColor];
-        regularTappedBG = [self buttonBackgroundImageWithColor:self.buttonTappedBackgroundColor];
-    }
+    UIImage *regularBG = [self buttonBackgroundImageWithColor:self.buttonBackgroundColor];
+    UIImage *regularTappedBG = [self buttonBackgroundImageWithColor:self.buttonTappedBackgroundColor];
     
     //Set up each of the regular buttons
     NSInteger i = 0;
     self.buttonViews = [NSMutableArray array];
-    for (NSString *title in self.buttonTitles) {
+    for (NSAttributedString *title in self.buttonTitles) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         
@@ -448,9 +431,8 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         button.frame = buttonFrame;
         button.titleLabel.font = self.buttonFont;
         
-        [button setTitleColor:self.buttonTextColor forState:UIControlStateNormal];
+        [button setAttributedTitle:title forState:UIControlStateNormal];
         [button setTitleColor:self.buttonTappedTextColor forState:UIControlStateHighlighted];
-        [button setTitle:title forState:UIControlStateNormal];
         
         if (self.contentstyle == TOActionSheetContentStyleLeft) {
             button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
@@ -480,22 +462,8 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
             }
         }
         
-        if (i == 0 && self.buttonTitles.count > 1 && (self.title.length == 0 && self.headerView == nil)) {
-            UIImage *background = [self buttonBackgroundImageWithColor:self.buttonBackgroundColor roundedTop:YES roundedBottom:NO];
-            UIImage *backgroundPressed = [self buttonBackgroundImageWithColor:self.buttonTappedBackgroundColor roundedTop:YES roundedBottom:NO];
-            [button setBackgroundImage:background forState:UIControlStateNormal];
-            [button setBackgroundImage:backgroundPressed forState:UIControlStateHighlighted];
-        }
-        else if (i >= self.buttonTitles.count-1 && self.destructiveTitle.length == 0) {
-            UIImage *background = [self buttonBackgroundImageWithColor:self.buttonBackgroundColor roundedTop:NO roundedBottom:YES];
-            UIImage *backgroundPressed = [self buttonBackgroundImageWithColor:self.buttonTappedBackgroundColor roundedTop:NO roundedBottom:YES];
-            [button setBackgroundImage:background forState:UIControlStateNormal];
-            [button setBackgroundImage:backgroundPressed forState:UIControlStateHighlighted];
-        }
-        else {
-            [button setBackgroundImage:regularBG forState:UIControlStateNormal];
-            [button setBackgroundImage:regularTappedBG forState:UIControlStateHighlighted];
-        }
+        [button setBackgroundImage:regularBG forState:UIControlStateNormal];
+        [button setBackgroundImage:regularTappedBG forState:UIControlStateHighlighted];
         
         i++;
     }
@@ -520,57 +488,6 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     [self.cancelButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
     
     [self addSubview:self.cancelButton];
-}
-
-- (void)setUpDestructiveButton
-{
-    if (self.destructiveTitle.length == 0) {
-        return;
-    }
-    
-    self.destructiveButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.destructiveButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    self.destructiveButton.frame = (CGRect){0,0,self.width,kTOActionSheetButtonHeight};
-    [self.destructiveButton setTitle:self.destructiveTitle forState:UIControlStateNormal];
-    [self.destructiveButton setTitleColor:self.destructiveButtonTextColor forState:UIControlStateNormal];
-    [self.destructiveButton setTitleColor:self.destructiveButtonTappedTextColor forState:UIControlStateHighlighted];
-    self.destructiveButton.titleLabel.font = self.buttonFont;
-    
-    if (self.contentstyle == TOActionSheetContentStyleLeft) {
-        self.destructiveButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    } else if (self.contentstyle == TOActionSheetContentStyleRight) {
-        self.destructiveButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    } else {
-        self.destructiveButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    }
-    
-    if (self.destructiveIcon != nil) {
-        UIImage *icon = [self.destructiveIcon imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        UIImageView *image = [[UIImageView alloc] initWithImage:icon];
-        image.tintColor = self.destructiveButtonTextColor;
-        CGFloat size = (self.destructiveButton.frame.size.height-image.frame.size.height)/2;
-        if (self.contentstyle == TOActionSheetContentStyleRight) {
-            image.frame = (CGRect){self.destructiveButton.frame.size.width-(10+image.frame.size.width), size, image.frame.size.width, image.frame.size.height};
-        } else {
-            image.frame = (CGRect){size, size, image.frame.size.width, image.frame.size.height};
-        }
-        [self.destructiveButton addSubview:image];
-        
-        if (self.contentstyle == TOActionSheetContentStyleLeft) {
-            [self.destructiveButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 50, 0, 0)];
-        } else if (self.contentstyle == TOActionSheetContentStyleRight) {
-            [self.destructiveButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
-        }
-    }
-    
-    BOOL roundedTop = (self.buttonTitles.count == 0 && self.headerView == nil && self.title.length == 0);
-    UIImage *backgroundImage = [self buttonBackgroundImageWithColor:self.destructiveButtonBackgroundColor roundedTop:roundedTop roundedBottom:YES];
-    [self.destructiveButton setBackgroundImage:backgroundImage forState:UIControlStateNormal];
-    
-    UIImage *backgroundTappedImage = [self buttonBackgroundImageWithColor:self.destructiveButtonTappedBackgroundColor roundedTop:roundedTop roundedBottom:YES];
-    [self.destructiveButton setBackgroundImage:backgroundTappedImage forState:UIControlStateHighlighted];
-    
-    [self.destructiveButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)setUpSeparators
@@ -599,8 +516,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         return;
     }
     
-    UIImage *backgroundImage = [self buttonBackgroundImageWithColor:self.headerBackgroundColor roundedTop:YES roundedBottom:NO];
-    self.headerBackgroundView = [[UIImageView alloc] initWithImage:backgroundImage];
+    self.headerBackgroundView = [[UIImageView alloc] init];
     self.headerBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     //Set up if a header view was supplied
@@ -661,11 +577,13 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 {
     //Create the container
     self.containerView = [[UIView alloc] init];
+    self.containerView.layer.backgroundColor = [UIColor whiteColor].CGColor;
+    self.containerView.layer.cornerRadius = kTOActionSheetBorderRadius;
+    self.containerView.layer.masksToBounds = YES;
     CGRect frame = CGRectZero;
     frame.size.width = self.width;
     frame.size.height += self.headerBackgroundView.frame.size.height;
     frame.size.height += (self.buttonTitles.count * kTOActionSheetButtonHeight);
-    frame.size.height += (self.destructiveButton.frame.size.height);
     self.containerView.frame = frame;
     
     //Lay out the elements in the container
@@ -686,14 +604,6 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         height += frame.size.height;
     }
     
-    //Add the destructive button
-    if (self.destructiveButton) {
-        frame = self.destructiveButton.frame;
-        frame.origin.y = height;
-        self.destructiveButton.frame = frame;
-        [self.containerView addSubview:self.destructiveButton];
-    }
-    
     //Add the separators
     if (self.headerBackgroundView) {
         height = self.headerBackgroundView.frame.size.height;
@@ -710,6 +620,10 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         [self.containerView addSubview:separatorView];
     }
     
+    self.shadowView = [[UIView alloc] init];
+    self.shadowView.frame = self.containerView.frame;
+    self.shadowView.backgroundColor = [UIColor clearColor];
+    [self addSubview:self.shadowView];
     [self addSubview:self.containerView];
 }
 
@@ -758,12 +672,11 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     
     //Set up various views in the container
     [self setUpRegularButtons];
-    [self setUpCancelButton];
-    [self setUpDestructiveButton];
     [self setUpHeaderView];
     [self setUpSeparators];
     [self setUpContainer];
-    
+    [self setUpCancelButton];
+
     //Force a layout now to update the state
     [self setNeedsLayout];
     [self layoutIfNeeded];
@@ -781,6 +694,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 
     CGRect containerFrame = self.containerView.frame;
     self.containerView.frame = CGRectOffset(self.containerView.frame, 0.0f, offset);
+    self.shadowView.frame = self.containerView.frame;
     
     CGRect cancelButtonFrame = self.cancelButton.frame;
     self.cancelButton.frame = CGRectOffset(self.cancelButton.frame, 0.0f, offset);
@@ -788,6 +702,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     //Animate the container view
     [UIView animateWithDuration:0.4f delay:0.0f usingSpringWithDamping:0.7f initialSpringVelocity:0.5f options:UIViewAnimationOptionAllowUserInteraction animations:^{
         self.containerView.frame = containerFrame;
+        self.shadowView.frame = self.containerView.frame;
     } completion:nil];
     
     //animate the cancel button
@@ -808,6 +723,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
     
     [UIView animateWithDuration:0.4f delay:0.0f usingSpringWithDamping:1.0f initialSpringVelocity:0.5f options:0 animations:^{
         self.containerView.frame = CGRectOffset(self.containerView.frame, 0.0f, offset);
+        self.shadowView.frame = self.containerView.frame;
         self.cancelButton.frame = CGRectOffset(self.cancelButton.frame, 0.0f, offset);
         self.backgroundColor = [UIColor clearColor];
     } completion:^(BOOL complete) {
@@ -877,11 +793,6 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
             self.cancelButtonTappedBlock();
         }
     }
-    else if (sender == self.destructiveButton) {
-        if (self.destructiveBlock) {
-            self.destructiveBlock();
-        }
-    }
     else {
         NSInteger index = [self.buttonViews indexOfObject:sender];
         [sender viewWithTag:123].tintColor = self.buttonTappedTextColor;
@@ -944,7 +855,7 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 }
 
 #pragma mark - Button Configuration -
-- (void)addButtonWithTitle:(NSString *)title icon:(UIImage *)icon tappedBlock:(void (^)(void))tappedBlock
+- (void)addButtonWithAttibuteStr:(NSAttributedString *)title icon:(UIImage *)icon tappedBlock:(void (^)(void))tappedBlock
 {
     if (self.buttonIcons == nil) {
         self.buttonIcons = [NSMutableArray array];
@@ -954,15 +865,15 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
         [self.buttonIcons insertObject:icon atIndex:self.buttonTitles.count];
     }
 
-    [self addButtonWithTitle:title atIndex:self.buttonTitles.count tappedBlock:tappedBlock];
+    [self addButtonWithAttibuteStr:title atIndex:self.buttonTitles.count tappedBlock:tappedBlock];
 }
 
-- (void)addButtonWithTitle:(NSString *)title tappedBlock:(void (^)(void))tappedBlock
+- (void)addButtonWithAttibuteStr:(NSAttributedString *)title tappedBlock:(void (^)(void))tappedBlock
 {
-    [self addButtonWithTitle:title atIndex:self.buttonTitles.count tappedBlock:tappedBlock];
+    [self addButtonWithAttibuteStr:title atIndex:self.buttonTitles.count tappedBlock:tappedBlock];
 }
 
-- (void)addButtonWithTitle:(NSString *)title atIndex:(NSInteger)index tappedBlock:(void (^)(void))tappedBlock
+- (void)addButtonWithAttibuteStr:(NSAttributedString *)title atIndex:(NSInteger)index tappedBlock:(void (^)(void))tappedBlock
 {
     if (title.length == 0 || tappedBlock == nil) {
         [NSException raise:NSInternalInconsistencyException format:@"TOActionSheet: Buttons must have both a block and a title."];
@@ -982,34 +893,6 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 {
     [self.buttonTitles removeObjectAtIndex:index];
     [self.buttonBlocks removeObjectAtIndex:index];
-}
-
-- (void)addDestructiveButtonWithTitle:(NSString *)title icon:(UIImage *)image tappedBlock:(void (^)(void))tappedBlock
-{
-    if (title.length == 0 || tappedBlock == nil) {
-        [NSException raise:NSInternalInconsistencyException format:@"TOActionSheet: Buttons must have both a block and a title."];
-    }
-    
-    
-    self.destructiveIcon = image;
-    self.destructiveTitle = title;
-    self.destructiveBlock = tappedBlock;
-}
-
-- (void)addDestructiveButtonWithTitle:(NSString *)title tappedBlock:(void (^)(void))tappedBlock
-{
-    if (title.length == 0 || tappedBlock == nil) {
-        [NSException raise:NSInternalInconsistencyException format:@"TOActionSheet: Buttons must have both a block and a title."];
-    }
-    
-    self.destructiveTitle = title;
-    self.destructiveBlock = tappedBlock;
-}
-
-- (void)removeDestructiveButton
-{
-    self.destructiveTitle = nil;
-    self.destructiveBlock = nil;
 }
 
 #pragma mark - Layout Calculation -
@@ -1179,9 +1062,6 @@ const CGFloat kTOActionSheetScreenPadding = 20.0f;
 {
     switch (direction) {
         case TOActionSheetArrowDirectionDown:
-            if (self.destructiveTitle) {
-                return self.destructiveButtonBackgroundColor;
-            }
                 
             if (self.buttonTitles.count) {
                 return self.buttonBackgroundColor;
